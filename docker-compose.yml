@@ -1,0 +1,13 @@
+  GNU nano 5.6.1                                                                                                 docker-compose.yml                                                                                                           
+version: "3.9"
+
+services:
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot-he
+    volumes:
+      - ./certbot-data/letsencrypt:/etc/letsencrypt
+      - ./certbot-data/dns_he_ddns.ini:/dns_he_ddns.ini:ro
+      - ./hooks/deploy-certs.sh:/deploy-certs.sh:ro
+    entrypoint: sh
+    command: -c "sleep infinity"
