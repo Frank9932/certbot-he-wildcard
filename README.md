@@ -30,5 +30,6 @@ Copy:
 ```bash
 cp env.example .env
 nano .env
+```
 
 ## 2. Run setup
