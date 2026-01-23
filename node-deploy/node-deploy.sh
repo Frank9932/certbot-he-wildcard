@@ -24,12 +24,24 @@ load_env_file "env.nodes" /env.nodes "$ROOT_DIR/env.nodes"
 : "${REMOTE_HOSTS:?REMOTE_HOSTS is required}"
 : "${REMOTE_CERT_BASE:?REMOTE_CERT_BASE is required}"
 
-CERT_SRC="/etc/letsencrypt/live/$DOMAIN_NAME"
 CERT_KEY="/home/certmaster/.ssh/certdeploy_ed25519"
 REMOTE_CERT_DIR="$REMOTE_CERT_BASE/$DOMAIN_NAME"
 
-if [ ! -d "$CERT_SRC" ]; then
-  echo "[ERROR] Certificate path missing: $CERT_SRC"
+CERT_LIVE_DIRS=(
+  "/etc/letsencrypt/live/$DOMAIN_NAME"
+  "${CERTBOT_DATA_DIR:-$ROOT_DIR/certbot-data}/letsencrypt/live/$DOMAIN_NAME"
+)
+
+CERT_SRC=""
+for dir in "${CERT_LIVE_DIRS[@]}"; do
+  if [ -d "$dir" ]; then
+    CERT_SRC="$dir"
+    break
+  fi
+done
+
+if [ -z "$CERT_SRC" ]; then
+  echo "[ERROR] Certificate path missing. Tried: ${CERT_LIVE_DIRS[*]}"
   exit 1
 fi
 
