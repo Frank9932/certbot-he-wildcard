@@ -48,7 +48,7 @@ Designed for AlmaLinux / RHEL / Debian / Ubuntu hosts.
    cp env.certbot.sample env.certbot
    cp env.nodes.sample env.nodes
    # Also prepare .env for setup.sh (contains DOMAIN_NAME/ADMIN_EMAIL/HE_DDNS_* etc.)
-   cp env.example .env
+   cp .env.sample .env
    ```
 5. On the certbot host, run the main setup (starts container, issues cert, installs renewal cron).  
    ```bash

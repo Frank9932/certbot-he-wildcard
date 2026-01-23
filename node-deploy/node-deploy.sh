@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[DEPLOY] Loading configuration..."
-. /env.certbot
-. /env.nodes
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+load_env_file() {
+  local label="$1"; shift
+  for candidate in "$@"; do
+    if [ -f "$candidate" ]; then
+      echo "[DEPLOY] Loading $label from $candidate"
+      # shellcheck source=/dev/null
+      . "$candidate"
+      return
+    fi
+  done
+  echo "[ERROR] Missing $label (checked: $*)"
+  exit 1
+}
+
+load_env_file "env.certbot" /env.certbot "$ROOT_DIR/env.certbot"
+load_env_file "env.nodes" /env.nodes "$ROOT_DIR/env.nodes"
 
 : "${DOMAIN_NAME:?DOMAIN_NAME is required}"
 : "${REMOTE_HOSTS:?REMOTE_HOSTS is required}"
