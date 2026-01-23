@@ -8,7 +8,7 @@ fi
 source .env
 
 CERTBOT_DATA_DIR="${CERTBOT_DATA_DIR:-./certbot-data}"
-DEPLOY_HOOK_SCRIPT="${DEPLOY_HOOK_SCRIPT:-./hooks/deploy-certs.sh}"
+DEPLOY_HOOK_SCRIPT="${DEPLOY_HOOK_SCRIPT:-./hooks/deploy-hook.sh}"
 
 echo "== Domain: $DOMAIN_NAME =="
 
@@ -59,10 +59,10 @@ fi
 
 # --- Test deploy hook once ---
 echo "[OK] Running deploy hook placeholder"
-docker exec certbot-he /deploy-certs.sh
+docker exec certbot-he /deploy-hook.sh
 
 # --- Setup auto-renew cron ---
-CRON_LINE="$RENEW_CRON_TIME docker exec certbot-he certbot renew --deploy-hook /deploy-certs.sh >> /var/log/certbot-renew.log 2>&1"
+CRON_LINE="$RENEW_CRON_TIME docker exec certbot-he certbot renew --deploy-hook /deploy-hook.sh >> /var/log/certbot-renew.log 2>&1"
 
 # Get existing crontab safely even if empty
 EXISTING_CRON="$(crontab -l 2>/dev/null || true)"

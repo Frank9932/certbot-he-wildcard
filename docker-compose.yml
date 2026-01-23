@@ -2,12 +2,16 @@
 version: "3.9"
 
 services:
-  certbot:
+  certbot-he:
     image: certbot/certbot:latest
     container_name: certbot-he
     volumes:
       - ./certbot-data/letsencrypt:/etc/letsencrypt
       - ./certbot-data/dns_he_ddns.ini:/dns_he_ddns.ini:ro
-      - ./hooks/deploy-certs.sh:/deploy-certs.sh:ro
+      - ./hooks/deploy-hook.sh:/deploy-hook.sh:ro
+      - ./node-deploy:/node-deploy:ro
+      - ./env.certbot:/env.certbot:ro
+      - ./env.nodes:/env.nodes:ro
+      - /home/certmaster/.ssh:/home/certmaster/.ssh:ro
     entrypoint: sh
     command: -c "sleep infinity"
